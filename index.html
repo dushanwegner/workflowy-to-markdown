@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script>
+      function wf2md_cleanup() {
+        var text = document.getElementsByTagName('textarea')[0].value;
+
+        // remove any initial spaces or newlines on the beginning of the text
+        text = text.replace(/^\s+/, '');
+
+        // turn first line into markdown-h1 if it does not start with - or #
+        if (!text.startsWith('- ') && !text.startsWith('# ')) {
+            text = '# ' + text;
+        }
+
+        // turn lines that start with - into markdown-h2
+        text = text.replace(/^- /gm, '\n## ');
+
+        // turn lines that start with any amount of spaces and then "- " into new lines
+        text = text.replace(/^\s*- /gm, '\n');
+        
+        // remove all newlines that are more than double and replace them with a double newline
+        text = text.replace(/\n{3,}/g, '\n\n');
+
+        // remove any trailing newlines or spaces
+        text = text.replace(/\s+$/, '');
+
+        document.getElementsByTagName('textarea')[0].value = text;
+
+        var textArea = document.getElementsByTagName('textarea')[0];
+        textArea.select();
+        document.execCommand("copy");
+
+        var button = document.getElementById("wf2md_cleanup_button");
+        button.innerHTML = "cleaned up version copied";
+        setTimeout(function() {
+            button.innerHTML = "clean up";
+          }, 2000);
+        
+
+      }
+    </script>
+
+    <title>Title of the document</title>
+  </head>
+
+  <body>
+    <h1>Workflowy-Markdown Cleanup</h1>
+
+    <form style="width: 100%; height: 100%" action="" onSubmit="return false;">
+      <textarea style="width: 100%; height: 500px;"></textarea>
+        <button type="button" id="wf2md_cleanup_button" onclick="wf2md_cleanup()">clean up</button>
+  </body>
+
+</html>
