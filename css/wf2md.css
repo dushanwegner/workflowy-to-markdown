@@ -1,0 +1,23 @@
+.wf2md-converter {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+#wf2md-textarea {
+    width: 100%;
+    min-height: 300px;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+#wf2md_cleanup_button {
+    display: block;
+    margin: 0 auto;
+    padding: 8px 20px;
+}
