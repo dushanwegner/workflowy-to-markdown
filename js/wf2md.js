@@ -5,43 +5,23 @@ jQuery(document).ready(function($) {
         gfm: true
     };
 
+    // Initialize TinyMCE
+    wp.editor.initialize('wf2md-rich-preview', {
+        tinymce: {
+            height: 300,
+            menubar: false,
+            plugins: 'paste',
+            toolbar: false,
+            readonly: 1,
+            content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 16px; line-height: 1.5; }',
+            paste_as_text: false,
+            paste_enable_default_filters: true
+        },
+        quicktags: false
+    });
+
     function updatePreview() {
         var text = $('#wf2md-textarea').val();
-        // Convert markdown to HTML
-        var html = marked.parse(text, options);
-        // Clean up newlines around em tags while preserving punctuation
-        html = html
-            .replace(/(\w)\s*\n?\s*<em>/g, '$1 <em>')  // add space only after word characters
-            .replace(/<em>\s*\n?\s*(\w)/g, '<em>$1')   // remove space after opening em
-            .replace(/(\w)\s*\n?\s*<\/em>/g, '$1</em>') // remove space before closing em
-            .replace(/<\/em>\s*\n?\s*(\w)/g, '</em> $1'); // add space only before word characters
-        $('#wf2md-preview').html(html);
-    }
-
-    // Function to select rich text and show feedback
-    function selectRichText() {
-        const previewContent = document.getElementById('wf2md-preview');
-        const selection = window.getSelection();
-        const range = document.createRange();
-        
-        // Select the preview content
-        range.selectNodeContents(previewContent);
-        selection.removeAllRanges();
-        selection.addRange(range);
-        
-        // Show feedback message
-        const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
-        const modifier = isMac ? '⌘' : 'Ctrl';
-        const $button = $('#wf2md-select-preview');
-        $button.text(`Selected! Press ${modifier}+C to copy`);
-        setTimeout(() => {
-            $button.text('Select Rich Text');
-        }, 2000);
-    }
-
-    // Function to copy HTML and show feedback
-    function copyHtml() {
-        const text = $('#wf2md-textarea').val();
         // Convert markdown to HTML with our custom cleanup
         let html = marked.parse(text, options);
         html = html
@@ -50,13 +30,40 @@ jQuery(document).ready(function($) {
             .replace(/(\w)\s*\n?\s*<\/em>/g, '$1</em>')
             .replace(/<\/em>\s*\n?\s*(\w)/g, '</em> $1');
 
-        // Create temporary textarea and copy its contents
+        // Update both previews
+        tinymce.get('wf2md-rich-preview').setContent(html);
+        $('#wf2md-html-preview').text(html);
+    }
+
+    // Function to select rich text and show feedback
+    function selectRichText() {
+        const editor = tinymce.get('wf2md-rich-preview');
+        editor.selection.select(editor.getBody());
+        editor.focus();
+        
+        const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+        const modifier = isMac ? '⌘' : 'Ctrl';
+        $(this).text(`Selected! Press ${modifier}+C to copy`);
+        setTimeout(() => {
+            $(this).text('Select Rich Text');
+        }, 2000);
+    }
+
+    // Function to copy HTML and show feedback
+    function copyHtml() {
+        const text = $('#wf2md-textarea').val();
+        let html = marked.parse(text, options);
+        html = html
+            .replace(/(\w)\s*\n?\s*<em>/g, '$1 <em>')
+            .replace(/<em>\s*\n?\s*(\w)/g, '<em>$1')
+            .replace(/(\w)\s*\n?\s*<\/em>/g, '$1</em>')
+            .replace(/<\/em>\s*\n?\s*(\w)/g, '</em> $1');
+
         const $temp = $('<textarea>');
         $('body').append($temp);
         $temp.val(html).select();
         
         try {
-            // Try to copy
             document.execCommand('copy');
             const $button = $('#wf2md-copy-html');
             $button.text('HTML Copied!');
@@ -74,6 +81,19 @@ jQuery(document).ready(function($) {
             $temp.remove();
         }
     }
+
+    // Tab switching
+    $('.wf2md-tab-button').on('click', function() {
+        const tab = $(this).data('tab');
+        
+        // Update buttons
+        $('.wf2md-tab-button').removeClass('active');
+        $(this).addClass('active');
+        
+        // Update content
+        $('.wf2md-tab').removeClass('active');
+        $(`#wf2md-${tab}-tab`).addClass('active');
+    });
 
     // Load checkbox state from cookie
     const removeFirstH2Cookie = 'wf2md_remove_first_h2';

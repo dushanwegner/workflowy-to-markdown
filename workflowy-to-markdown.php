@@ -14,12 +14,26 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-// Add shortcode (by using a shortcode, any page can be turned into a workflowy-to-markdown converter)
-function wf2md_converter_shortcode() {
-    // Enqueue necessary scripts
+// Add plugin scripts
+function wf2md_enqueue_scripts() {
+    wp_enqueue_script('jquery');
+    
+    // Use CDN for marked.js to ensure it's available
     wp_enqueue_script('marked-js', 'https://cdn.jsdelivr.net/npm/marked/marked.min.js', array(), '4.0.0', true);
+    
+    // Load our script after marked.js
     wp_enqueue_script('wf2md-script', plugins_url('js/wf2md.js', __FILE__), array('jquery', 'marked-js'), '1.0', true);
     
+    // Add TinyMCE
+    wp_enqueue_editor();
+    
+    // Add our styles
+    wp_enqueue_style('wf2md-styles', plugins_url('css/wf2md.css', __FILE__));
+}
+add_action('wp_enqueue_scripts', 'wf2md_enqueue_scripts');
+
+// Add shortcode (by using a shortcode, any page can be turned into a workflowy-to-markdown converter)
+function wf2md_converter_shortcode() {
     // Return HTML for the converter
     return '
     <div class="wf2md-converter">
@@ -32,18 +46,25 @@ function wf2md_converter_shortcode() {
         </div>
         <button type="button" id="wf2md_cleanup_button" class="wf2md_button button button-primary">Clean up</button>
         <br/>
-        <button type="button" id="wf2md-select-preview" class="wf2md_button button button-primary">Select Rich Text</button>
-        <button type="button" id="wf2md-copy-html" class="wf2md_button button button-primary">Copy HTML</button>
-        <div id="wf2md-preview" style="margin-top: 20px; padding: 20px; border: 1px solid #ddd; border-radius: 4px;"></div>
+        <div class="wf2md-tabs">
+            <div class="wf2md-tab-buttons">
+                <button type="button" class="wf2md-tab-button active" data-tab="rich">Rich Text</button>
+                <button type="button" class="wf2md-tab-button" data-tab="html">HTML</button>
+            </div>
+            <div class="wf2md-tab-content">
+                <div id="wf2md-rich-tab" class="wf2md-tab active">
+                    <button type="button" id="wf2md-select-preview" class="wf2md_button button button-primary">Select Rich Text</button>
+                    <div id="wf2md-preview-wrapper">
+                        <textarea id="wf2md-rich-preview"></textarea>
+                    </div>
+                </div>
+                <div id="wf2md-html-tab" class="wf2md-tab">
+                    <button type="button" id="wf2md-copy-html" class="wf2md_button button button-primary">Copy HTML</button>
+                    <pre id="wf2md-html-preview" style="margin-top: 20px; padding: 20px; border: 1px solid #ddd; border-radius: 4px; background: #f9f9f9; overflow: auto;"></pre>
+                </div>
+            </div>
+        </div>
     </div>
     ';
 }
 add_shortcode('workflowy_markdown', 'wf2md_converter_shortcode');
-
-// Add plugin scripts
-function wf2md_enqueue_scripts() {
-    if (has_shortcode(get_post()->post_content, 'workflowy_markdown')) {
-        wp_enqueue_style('wf2md-styles', plugins_url('css/wf2md.css', __FILE__));
-    }
-}
-add_action('wp_enqueue_scripts', 'wf2md_enqueue_scripts');
