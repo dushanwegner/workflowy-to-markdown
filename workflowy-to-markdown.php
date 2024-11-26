@@ -14,16 +14,18 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-// Add shortcode
+// Add shortcode (by using a shortcode, any page can be turned into a workflowy-to-markdown converter)
 function wf2md_converter_shortcode() {
     // Enqueue necessary scripts
-    wp_enqueue_script('wf2md-script', plugins_url('js/wf2md.js', __FILE__), array('jquery'), '1.0', true);
+    wp_enqueue_script('marked-js', 'https://cdn.jsdelivr.net/npm/marked/marked.min.js', array(), '4.0.0', true);
+    wp_enqueue_script('wf2md-script', plugins_url('js/wf2md.js', __FILE__), array('jquery', 'marked-js'), '1.0', true);
     
     // Return HTML for the converter
     return '
     <div class="wf2md-converter">
         <textarea id="wf2md-textarea" style="width: 100%; height: 300px;"></textarea>
         <button type="button" id="wf2md_cleanup_button" class="button button-primary">Clean up</button>
+        <div id="wf2md-preview" style="margin-top: 20px; padding: 20px; border: 1px solid #ddd; border-radius: 4px;"></div>
     </div>
     ';
 }
