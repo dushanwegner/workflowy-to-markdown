@@ -72,17 +72,33 @@ jQuery(document).ready(function($) {
             }
         }
 
-        // remove all newlines that are more than double and replace them with a double newline
-        text = text.replace(/\n{3,}/g, '\n\n');
-
-        // turn lines that start with any amount of spaces and then "- " into new lines
-        text = text.replace(/^\s*- /gm, '\n');
-
-        // remove all newlines that are more than double and replace them with a double newline
-        text = text.replace(/\n{3,}/g, '\n\n');
-
-        // when italics-passages accidentally contain a space at the end, fix ist. Meaning: convert *xxxxx xxxx *xxx to *xxxxx xxxx* xxx.
-        text = text.replace(/\*([^*]+)\s+\*/g, '*$1* ');
+        // First normalize all line breaks to single newlines
+        text = text.replace(/\n{2,}/g, '\n');
+        
+        // Remove bullet points (- ) at any indentation level
+        text = text.replace(/^(\s*)- /gm, '$1');
+        
+        // Fix italics formatting - process line by line
+        text = text.split('\n').map(line => {
+            return line.replace(/([^\s*])?(\s*)\*(\s*)([^*]+?)(\s*)\*(\s*)([^\s*])?/g, function(match, before, spacesBefore, spacesInStart, content, spacesInEnd, spacesAfter, after) {
+                // Define character sets for spacing rules
+                const punctuation = /^[.!?,;:)\]}"'(\[{]$/;
+                
+                // Build prefix - no space if it's punctuation
+                let prefix = '';
+                if (before) {
+                    prefix = punctuation.test(before) ? before : before + ' ';
+                }
+                
+                // Build suffix - no space if it's punctuation
+                let suffix = '';
+                if (after) {
+                    suffix = punctuation.test(after) ? after : ' ' + after;
+                }
+                
+                return prefix + '*' + content.trim() + '*' + suffix;
+            });
+        }).filter(line => line.trim()).join('\n\n');  // Filter empty lines and join with double newlines
 
         // remove any trailing newlines or spaces
         text = text.replace(/\s+$/, '');
