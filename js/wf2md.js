@@ -1,4 +1,17 @@
 jQuery(document).ready(function($) {
+    // Create custom renderer for marked
+    const renderer = new marked.Renderer();
+    renderer.em = function(text) {
+        return `<em>${text}</em>`;  // No extra spaces or line breaks
+    };
+    
+    // Configure marked with custom renderer
+    marked.setOptions({
+        renderer: renderer,
+        gfm: true,
+        breaks: true
+    });
+
     function updatePreview() {
         var text = $('#wf2md-textarea').val();
         $('#wf2md-preview').html(marked.parse(text));
@@ -104,7 +117,7 @@ jQuery(document).ready(function($) {
         text = text.replace(/\s+$/, '');
 
         $('#wf2md-textarea').val(text);
-        updatePreview();
+        $('#wf2md-preview').html(marked.parse(text));
 
         // Copy to clipboard
         $('#wf2md-textarea').select();
