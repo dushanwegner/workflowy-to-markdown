@@ -39,6 +39,42 @@ jQuery(document).ready(function($) {
         }, 2000);
     }
 
+    // Function to copy HTML and show feedback
+    function copyHtml() {
+        const text = $('#wf2md-textarea').val();
+        // Convert markdown to HTML with our custom cleanup
+        let html = marked.parse(text, options);
+        html = html
+            .replace(/(\w)\s*\n?\s*<em>/g, '$1 <em>')
+            .replace(/<em>\s*\n?\s*(\w)/g, '<em>$1')
+            .replace(/(\w)\s*\n?\s*<\/em>/g, '$1</em>')
+            .replace(/<\/em>\s*\n?\s*(\w)/g, '</em> $1');
+
+        // Create temporary textarea and copy its contents
+        const $temp = $('<textarea>');
+        $('body').append($temp);
+        $temp.val(html).select();
+        
+        try {
+            // Try to copy
+            document.execCommand('copy');
+            const $button = $('#wf2md-copy-html');
+            $button.text('HTML Copied!');
+            setTimeout(() => {
+                $button.text('Copy HTML');
+            }, 2000);
+        } catch (err) {
+            console.error('Failed to copy:', err);
+            const $button = $('#wf2md-copy-html');
+            $button.text('Copy failed!');
+            setTimeout(() => {
+                $button.text('Copy HTML');
+            }, 2000);
+        } finally {
+            $temp.remove();
+        }
+    }
+
     // Load checkbox state from cookie
     const removeFirstH2Cookie = 'wf2md_remove_first_h2';
     $('#wf2md-remove-first-h2').prop('checked', localStorage.getItem(removeFirstH2Cookie) === 'true');
@@ -51,6 +87,7 @@ jQuery(document).ready(function($) {
     // Event handlers
     $('#wf2md-textarea').on('input', updatePreview);
     $('#wf2md-select-preview').on('click', selectRichText);
+    $('#wf2md-copy-html').on('click', copyHtml);
 
     $('#wf2md_cleanup_button').on('click', function() {
         var text = $('#wf2md-textarea').val();
