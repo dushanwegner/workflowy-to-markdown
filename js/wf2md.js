@@ -1,17 +1,4 @@
 jQuery(document).ready(function($) {
-    // Create custom renderer for marked
-    const renderer = new marked.Renderer();
-    renderer.em = function(text) {
-        return `<em>${text}</em>`;  // No extra spaces or line breaks
-    };
-    
-    // Configure marked with custom renderer
-    marked.setOptions({
-        renderer: renderer,
-        gfm: true,
-        breaks: true
-    });
-
     function updatePreview() {
         var text = $('#wf2md-textarea').val();
         $('#wf2md-preview').html(marked.parse(text));
@@ -117,14 +104,15 @@ jQuery(document).ready(function($) {
         text = text.replace(/\s+$/, '');
 
         $('#wf2md-textarea').val(text);
-        $('#wf2md-preview').html(marked.parse(text));
+        updatePreview();
 
-        // Copy to clipboard
         $('#wf2md-textarea').select();
-        document.execCommand('copy');
 
         var $button = $(this);
-        $button.text('Cleaned up version copied!');
+        // Use ⌘ for macOS, Ctrl for other platforms
+        const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+        const modifier = isMac ? '⌘' : 'Ctrl';
+        $button.text(`Cleaned up! Press ${modifier}+C to copy`);
         setTimeout(function() {
             $button.text('Clean up');
         }, 2000);
