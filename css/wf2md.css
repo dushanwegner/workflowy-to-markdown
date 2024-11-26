@@ -20,4 +20,5 @@
     display: inline-block;
     margin: 5px auto;
     padding: 8px 20px;
+    min-width: 250px;
 }

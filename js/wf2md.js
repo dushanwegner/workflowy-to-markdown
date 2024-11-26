@@ -4,6 +4,27 @@ jQuery(document).ready(function($) {
         $('#wf2md-preview').html(marked.parse(text));
     }
 
+    // Function to select rich text and show feedback
+    function selectRichText() {
+        const previewContent = document.getElementById('wf2md-preview');
+        const selection = window.getSelection();
+        const range = document.createRange();
+        
+        // Select the preview content
+        range.selectNodeContents(previewContent);
+        selection.removeAllRanges();
+        selection.addRange(range);
+        
+        // Show feedback message
+        const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+        const modifier = isMac ? '⌘' : 'Ctrl';
+        const $button = $('#wf2md-select-preview');
+        $button.text(`Selected! Press ${modifier}+C to copy`);
+        setTimeout(() => {
+            $button.text('Select Rich Text');
+        }, 2000);
+    }
+
     // Load checkbox state from cookie
     const removeFirstH2Cookie = 'wf2md_remove_first_h2';
     $('#wf2md-remove-first-h2').prop('checked', localStorage.getItem(removeFirstH2Cookie) === 'true');
@@ -13,8 +34,9 @@ jQuery(document).ready(function($) {
         localStorage.setItem(removeFirstH2Cookie, this.checked);
     });
 
-    // Update preview on input
+    // Event handlers
     $('#wf2md-textarea').on('input', updatePreview);
+    $('#wf2md-select-preview').on('click', selectRichText);
 
     $('#wf2md_cleanup_button').on('click', function() {
         var text = $('#wf2md-textarea').val();
