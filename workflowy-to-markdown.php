@@ -3,7 +3,7 @@
 Plugin Name: Workflowy-MP to Markdown Converter
 Plugin URI: https://github.com/yourusername/workflowy-to-markdown
 Description: A WordPress plugin that converts Workflowy-MD output to cleaner Markdown format. Use the shortcode [workflowy_markdown] to convert your Workflowy content into clean Markdown format in your posts or pages.
-Version: 1.0
+Version: 1.1
 Author: Dushan Wegner
 Author URI: https://dushanwegner.com
 License: GPL v2 or later
