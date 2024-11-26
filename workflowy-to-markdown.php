@@ -24,6 +24,12 @@ function wf2md_converter_shortcode() {
     return '
     <div class="wf2md-converter">
         <textarea id="wf2md-textarea" style="width: 100%; height: 300px;"></textarea>
+        <div style="margin: 10px 0;">
+            <label style="display: inline-flex; align-items: center; gap: 5px;">
+                <input type="checkbox" id="wf2md-remove-first-h2" style="margin: 0;">
+                Remove first H2
+            </label>
+        </div>
         <button type="button" id="wf2md_cleanup_button" class="button button-primary">Clean up</button>
         <div id="wf2md-preview" style="margin-top: 20px; padding: 20px; border: 1px solid #ddd; border-radius: 4px;"></div>
     </div>
