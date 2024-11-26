@@ -46,21 +46,24 @@ function wf2md_converter_shortcode() {
         </div>
         <button type="button" id="wf2md_cleanup_button" class="wf2md_button button button-primary">Clean up</button>
         <br/>
-        <div class="wf2md-tabs">
-            <div class="wf2md-tab-buttons">
-                <button type="button" class="wf2md-tab-button active" data-tab="rich">Rich Text</button>
-                <button type="button" class="wf2md-tab-button" data-tab="html">HTML</button>
+        <div class="wf2md-preview-container">
+            <div class="wf2md-tabs">
+                <div class="wf2md-tab-buttons">
+                    <button type="button" class="wf2md-tab-button active" data-tab="rich">Rich Text</button>
+                    <button type="button" class="wf2md-tab-button" data-tab="html">HTML</button>
+                </div>
             </div>
-            <div class="wf2md-tab-content">
+            
+            <div class="wf2md-preview-section">
                 <div id="wf2md-rich-tab" class="wf2md-tab active">
-                    <button type="button" id="wf2md-select-preview" class="wf2md_button button button-primary">Select Rich Text</button>
+                    <button type="button" id="wf2md-select-preview" class="wf2md_button button">Select Rich Text</button>
                     <div id="wf2md-preview-wrapper">
                         <textarea id="wf2md-rich-preview"></textarea>
                     </div>
                 </div>
                 <div id="wf2md-html-tab" class="wf2md-tab">
-                    <button type="button" id="wf2md-copy-html" class="wf2md_button button button-primary">Copy HTML</button>
-                    <pre id="wf2md-html-preview" style="margin-top: 20px; padding: 20px; border: 1px solid #ddd; border-radius: 4px; background: #f9f9f9; overflow: auto;"></pre>
+                    <button type="button" id="wf2md-copy-html" class="wf2md_button button">Copy HTML</button>
+                    <pre id="wf2md-html-preview"></pre>
                 </div>
             </div>
         </div>

@@ -1,6 +1,6 @@
 .wf2md-converter {
-    max-width: 800px;
-    margin: 20px auto;
+    max-width: 1200px;
+    margin: 0 auto;
     padding: 20px;
 }
 
@@ -20,5 +20,76 @@
     display: inline-block;
     margin: 5px auto;
     padding: 8px 20px;
-    min-width: 250px;
+    min-width: 120px;
+}
+
+/* Preview container and tabs */
+.wf2md-preview-container {
+    margin-top: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #fff;
+}
+
+.wf2md-tabs {
+    border-bottom: 1px solid #ddd;
+    background: #f5f5f5;
+    padding: 10px 10px 0;
+    border-radius: 4px 4px 0 0;
+}
+
+.wf2md-tab-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.wf2md-tab-button {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    background: #f5f5f5;
+    cursor: pointer;
+    border-radius: 4px 4px 0 0;
+    margin-bottom: -1px;
+}
+
+.wf2md-tab-button.active {
+    background: #fff;
+    border-color: #ddd;
+    border-bottom: 1px solid #fff;
+    color: #000;
+}
+
+/* Preview sections */
+.wf2md-preview-section {
+    padding: 20px;
+}
+
+.wf2md-tab {
+    display: none;
+}
+
+.wf2md-tab.active {
+    display: block;
+}
+
+/* Rich text preview */
+#wf2md-preview-wrapper {
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    min-height: 300px;
+}
+
+/* HTML preview */
+#wf2md-html-preview {
+    margin-top: 10px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #f9f9f9;
+    font-family: monospace;
+    white-space: pre-wrap;
+    min-height: 300px;
+    overflow: auto;
 }
