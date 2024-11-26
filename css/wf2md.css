@@ -16,8 +16,8 @@
     line-height: 1.4;
 }
 
-#wf2md_cleanup_button {
-    display: block;
-    margin: 0 auto;
+.wf2md_button {
+    display: inline-block;
+    margin: 5px auto;
     padding: 8px 20px;
 }

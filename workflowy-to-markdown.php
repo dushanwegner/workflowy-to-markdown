@@ -30,7 +30,8 @@ function wf2md_converter_shortcode() {
                 Remove first H2
             </label>
         </div>
-        <button type="button" id="wf2md_cleanup_button" class="button button-primary">Clean up</button>
+        <button type="button" class="wf2md_button" id="wf2md_cleanup_button" class="button button-primary">Clean up</button>
+        <button type="button" class="wf2md_button" id="wf2md-select-preview" class="button button-primary">Select Rich Text</button>
         <div id="wf2md-preview" style="margin-top: 20px; padding: 20px; border: 1px solid #ddd; border-radius: 4px;"></div>
     </div>
     ';
