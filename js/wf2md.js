@@ -1,7 +1,21 @@
 jQuery(document).ready(function($) {
+    // Configure marked options
+    const options = {
+        breaks: true,
+        gfm: true
+    };
+
     function updatePreview() {
         var text = $('#wf2md-textarea').val();
-        $('#wf2md-preview').html(marked.parse(text));
+        // Convert markdown to HTML
+        var html = marked.parse(text, options);
+        // Clean up newlines around em tags while preserving punctuation
+        html = html
+            .replace(/(\w)\s*\n?\s*<em>/g, '$1 <em>')  // add space only after word characters
+            .replace(/<em>\s*\n?\s*(\w)/g, '<em>$1')   // remove space after opening em
+            .replace(/(\w)\s*\n?\s*<\/em>/g, '$1</em>') // remove space before closing em
+            .replace(/<\/em>\s*\n?\s*(\w)/g, '</em> $1'); // add space only before word characters
+        $('#wf2md-preview').html(html);
     }
 
     // Function to select rich text and show feedback
