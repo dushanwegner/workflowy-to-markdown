@@ -82,6 +82,67 @@ jQuery(document).ready(function($) {
         }
     }
 
+    // Convert Markdown to WorkFlowy format
+    function md2wf() {
+        const input = $('#wf2md-textarea').val();
+        console.log('Input:', input);
+        
+        // Tracks lines that should not get bullet points
+        const protectedLines = new Set();
+        
+        // Convert H1 headers to top-level text WITHOUT any bullet points
+        let converted = input.replace(/^#\s+(.+)$/gm, function(match, p1, offset) {
+            // Mark the line index to prevent bullet point addition
+            protectedLines.add(offset);
+            return p1;
+        });
+        
+        // Then convert h2 headers
+        converted = converted.replace(/^##\s+(.+)$/gm, '- $1');
+        
+        // Then convert regular paragraphs (lines that don't start with special chars)
+        converted = converted.replace(/^(?![#\-\*\s])(.+)$/gm, function(match, offset) {
+            // Only add bullet point if the line is not protected
+            return protectedLines.has(offset) ? match : '  - ' + match;
+        });
+        
+        // Split sentences within paragraphs that start with "  - "
+        converted = converted.replace(/^(\s{2}-\s)(.+)$/gm, function(match, prefix, content) {
+            // Split content by sentence endings AFTER closing characters
+            const sentences = content.split(/([.] |[?] |[!] )/);
+            let result = prefix + sentences[0];
+            
+            // Add remaining sentences with increased indentation
+            for (let i = 1; i < sentences.length - 1; i += 2) {
+                if (sentences[i] && sentences[i + 1]) {
+                    result += sentences[i] + '\n    - ' + sentences[i + 1].trim();
+                }
+            }
+            
+            return result;
+        });
+        
+        // Replace double newlines with single newlines
+        converted = converted.replace(/\n{2,}/g, '\n');
+        
+        console.log('Converted:', converted);
+        $('#wf2md-textarea').val(converted);
+    }
+
+    // Function to select rich text and show feedback
+    function selectRichText() {
+        const editor = tinymce.get('wf2md-rich-preview');
+        editor.selection.select(editor.getBody());
+        editor.focus();
+        
+        const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+        const modifier = isMac ? '⌘' : 'Ctrl';
+        $(this).text(`Selected! Press ${modifier}+C to copy`);
+        setTimeout(() => {
+            $(this).text('Select Rich Text');
+        }, 2000);
+    }
+
     // Tab switching
     $('.wf2md-tab-button').on('click', function() {
         const tab = $(this).data('tab');
@@ -207,7 +268,10 @@ jQuery(document).ready(function($) {
         const modifier = isMac ? '⌘' : 'Ctrl';
         $button.text(`Cleaned up! Press ${modifier}+C to copy`);
         setTimeout(function() {
-            $button.text('Clean up');
+            $button.text('WF to Markdown');
         }, 2000);
     });
+
+    // Bind MD to WF conversion
+    $('#md2wf_button').on('click', md2wf);
 });

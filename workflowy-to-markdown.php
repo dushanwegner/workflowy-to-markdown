@@ -44,7 +44,8 @@ function wf2md_converter_shortcode() {
                 Remove first H2
             </label>
         </div>
-        <button type="button" id="wf2md_cleanup_button" class="wf2md_button button button-primary">Clean up</button>
+        <button type="button" id="wf2md_cleanup_button" class="wf2md_button button button-primary">WF to MD</button>
+        <button type="button" id="md2wf_button" class="wf2md_button button button-primary">MD to WF</button>
         <br/>
         <div class="wf2md-preview-container">
             <div class="wf2md-tabs">
